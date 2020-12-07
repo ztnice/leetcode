@@ -2,9 +2,7 @@ package leetcode.simple;
 
 import leetcode.base.structure.TreeNode;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class LevelOrderBottom {
 
@@ -39,27 +37,45 @@ public class LevelOrderBottom {
      */
 
 
-    public static List<List<Integer>> levelOrderBottom(TreeNode root) {
 
+    //这里采用了广度优先搜索
+    public static List<List<Integer>> levelOrderBottom(TreeNode root) {
         if(root == null){
             return new ArrayList<>();
         }
-        List<List<Integer>> l = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        list.add(root.val);
-        l.add(list);
-        List<List<Integer>> lists = resultList(l,root);
+        List<List<Integer>> lists = new LinkedList<>();
 
+        Queue<TreeNode> queue  = new LinkedList<>();
+        queue.offer(root);
 
-        Collections.reverse(lists);
+        while (!queue.isEmpty()){
 
+            List<Integer> level = new ArrayList<>();
+            int size = queue.size();
+            for(int i = 0 ; i < size ; i ++){
+                TreeNode node = queue.poll();
+                if(node == null){
+                    continue;
+                }
+                level.add(node.val);
+                TreeNode left = node.left;
+                TreeNode right = node.right;
+                if(left != null){
+                    queue.offer(left);
+                }
+                if(right != null){
+                    queue.offer(right);
+                }
+            }
+            lists.add(0,level);
+        }
         return lists;
-
-
 
     }
 
 
+    //这里有点小bug  翻车了  所以就废弃了
+    @Deprecated
     public  static List<List<Integer>>  resultList(List<List<Integer>> lists , TreeNode treeNode){
 
         if(treeNode == null){
